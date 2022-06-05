@@ -5,6 +5,9 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import LoginRouter from "./routes/loginRoute.js";
 import SignupRouter from "./routes/signupRoute.js";
+import CreateTokenRouter from "./routes/createTokenRoute.js";
+import { validateToken } from "./middleware/userAuth.js";
+import { db } from "./configs/dbConfig.js";
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -23,12 +26,39 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+import jwt from "jsonwebtoken";
+const { verify } = jwt;
+app.get("/coba", validateToken, (req, res) => {
+  const token = req.body.token;
+  const username = req.body.username;
+  const sql = "SELECT * FROM user WHERE username= ?;";
+  db.query(sql, username, (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send("BERHASI");
+    }
+  });
+});
 
 app.get("/", (req, res) => {
   res.send("INI SERVER APLIKASI KOCE");
 });
+
+app.get("/verify", (req, res) => {
+  const bearerToken = req.header("authorization").split(" ");
+  const token = bearerToken[1];
+  console.log(token);
+  verify(token, process.env.JWT_SECRET.toString(), (err, response) => {
+    if (err) {
+      res.send(err);
+    }
+    res.send(response.username);
+  });
+});
 app.use("/login", LoginRouter);
 app.use("/signup", SignupRouter);
+app.use("/token", CreateTokenRouter);
 
 app.set("port", process.env.PORT || 3001);
 

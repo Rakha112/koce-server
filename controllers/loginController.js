@@ -1,6 +1,7 @@
-import { createTokens } from "../middleware/createJWT.js";
+import { createAccessTokens } from "../middleware/createJWT.js";
 import { db } from "../configs/dbConfig.js";
 import bcrypt from "bcryptjs";
+
 export const login = (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
@@ -14,13 +15,14 @@ export const login = (req, res) => {
     if (result.length > 0) {
       bcrypt.compare(password, result[0].password, (error, response) => {
         if (response) {
-          const accessToken = createTokens(result[0].username);
+          const accessToken = createAccessTokens(result[0].username);
           res.cookie("access-token", accessToken, {
             maxAge: 60 * 60 * 1000,
             httpOnly: true,
             secure: true,
             sameSite: "none",
           });
+          res.header("Authorization", `Bearer ${accessToken}`);
           res.send({
             alert: 1,
             message: "Log In berhasil",
