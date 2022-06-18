@@ -45,17 +45,7 @@ app.get("/", (req, res) => {
   res.send("INI SERVER APLIKASI KOCE");
 });
 
-app.get("/verify", (req, res) => {
-  const bearerToken = req.header("authorization").split(" ");
-  const token = bearerToken[1];
-  console.log(token);
-  verify(token, process.env.JWT_SECRET.toString(), (err, response) => {
-    if (err) {
-      res.send(err);
-    }
-    res.send(response.username);
-  });
-});
+app.get("/profile", validateToken);
 app.use("/login", LoginRouter);
 app.use("/signup", SignupRouter);
 app.use("/token", CreateTokenRouter);

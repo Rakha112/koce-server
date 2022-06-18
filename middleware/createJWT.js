@@ -15,7 +15,7 @@ export const createRefreshTokens = (user) => {
     { username: user },
     process.env.JWT_SECRET.toString(),
     {
-      expiresIn: "1m",
+      expiresIn: "3m",
     }
   );
   return refreshToken;
