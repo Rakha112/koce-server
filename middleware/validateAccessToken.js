@@ -3,7 +3,7 @@ const { verify } = jwt;
 import jwt_decode from "jwt-decode";
 import { createAccessTokens } from "./createJWT.js";
 
-export const validateToken = (req, res, next) => {
+export const validateAccessToken = (req, res, next) => {
   const username = req.query.username;
   // Token dari web Cookie
   const tokenWeb = req.cookies["access-token"];
@@ -16,7 +16,6 @@ export const validateToken = (req, res, next) => {
     const token = tokenMobile.split(" ");
     // ambil tokennya
     const accessToken = token[1];
-    const refreshToken = token[2];
     // Validasi Token
     try {
       // Cek apakah Username Token sama dengan username Req
@@ -33,9 +32,10 @@ export const validateToken = (req, res, next) => {
             }
             // Jika accessToken valid
             res.send({
+              valid: true,
               loggedIn: true,
               username: response.username,
-              pesan: "user terautentikasi",
+              pesan: "user terautentikasi access",
             });
             return next();
           }
@@ -44,28 +44,17 @@ export const validateToken = (req, res, next) => {
         //Jika username di token tidak sama dengan username di request body
         console.log("SALAH");
         return res.send({
-          pesan: "user tidak terautentikasi",
+          pesan: "user tidak terautentikasi access",
+          valid: false,
           loggedIn: false,
         });
       }
     } catch (err) {
-      // Jika accessToken expired validasi refreshToken
-      verify(refreshToken, process.env.JWT_SECRET.toString(), (err) => {
-        // Jika refreshToken sudah tidak valid atau expired maka user tidak terautentikasi
-        if (err) {
-          return res.send({
-            pesan: "user tidak terautentikasi",
-            loggedIn: false,
-            err: err,
-            // loggedIn: false,
-          });
-        }
-        // Jika refreshToken masih valid Generate new Refresh Token
-        const newAccessToken = createAccessTokens(username);
-        res.header("Authorization", `Bearer ${newAccessToken}`);
-        return next();
+      return res.send({
+        valid: false,
+        pesan: "user tidak terautentikasi access",
+        loggedIn: false,
       });
-      // jika error
     }
   } else {
     const accessToken = tokenWeb;
