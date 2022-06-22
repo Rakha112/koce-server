@@ -15,7 +15,8 @@ export const validateRefreshToken = (req, res, next) => {
     //Split Bearer dan Token
     const token = tokenMobile.split(" ");
     // ambil tokennya
-    const refreshToken = token[2];
+    const refreshToken = token[1];
+    console.log({ refreshToken });
     // Validasi Token
     try {
       // Cek apakah Username Token sama dengan username Req
@@ -31,26 +32,26 @@ export const validateRefreshToken = (req, res, next) => {
               throw err;
             }
             // Jika accessToken valid
-            res.send({
-              valid: true,
-              loggedIn: true,
-              username: response.username,
-              pesan: "user terautentikasi refresh",
-            });
+            const newAccessToken = createAccessTokens(username);
+            console.log({ newAccessToken });
+            res.status(201).header("authorization", `Bearer ${newAccessToken}`);
+            req.username = username;
+            req.loggedIn = true;
             return next();
           }
         );
       } else {
         //Jika username di token tidak sama dengan username di request body
         console.log("SALAH");
-        return res.send({
+        return res.status(403).send({
           pesan: "user tidak terautentikasi refresh",
           valid: false,
           loggedIn: false,
         });
       }
     } catch (err) {
-      return res.send({
+      console.log("ERROR REFRESH");
+      return res.status(401).send({
         valid: false,
         pesan: "user tidak terautentikasi refresh",
         loggedIn: false,

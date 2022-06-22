@@ -16,6 +16,7 @@ export const validateAccessToken = (req, res, next) => {
     const token = tokenMobile.split(" ");
     // ambil tokennya
     const accessToken = token[1];
+    console.log({ accessToken });
     // Validasi Token
     try {
       // Cek apakah Username Token sama dengan username Req
@@ -30,28 +31,23 @@ export const validateAccessToken = (req, res, next) => {
             if (err) {
               throw err;
             }
-            // Jika accessToken valid
-            res.send({
-              valid: true,
-              loggedIn: true,
-              username: response.username,
-              pesan: "user terautentikasi access",
-            });
+            req.username = username;
+            req.loggedIn = true;
             return next();
           }
         );
       } else {
         //Jika username di token tidak sama dengan username di request body
         console.log("SALAH");
-        return res.send({
-          pesan: "user tidak terautentikasi access",
-          valid: false,
+        req.loggedIn = false;
+        return res.status(403).send({
+          pesan: "user tidak diijinkan",
           loggedIn: false,
         });
       }
     } catch (err) {
-      return res.send({
-        valid: false,
+      console.log("ERROR ACCESS");
+      return res.status(401).send({
         pesan: "user tidak terautentikasi access",
         loggedIn: false,
       });

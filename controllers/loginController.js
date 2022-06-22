@@ -62,7 +62,7 @@ export const loginMobile = (req, res) => {
           const accessToken = createAccessTokens(result[0].username);
           const refreshToken = createRefreshTokens(result[0].username);
           res.header("Authorization", `Bearer ${accessToken} ${refreshToken}`);
-          res.send({
+          res.status(201).send({
             alert: 1,
             pesan: "Log In berhasil",
           });

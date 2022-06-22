@@ -5,7 +5,6 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import LoginRouter from "./routes/loginRoute.js";
 import SignupRouter from "./routes/signupRoute.js";
-import CreateTokenRouter from "./routes/createTokenRoute.js";
 import { validateAccessToken } from "./middleware/validateAccessToken.js";
 import { validateRefreshToken } from "./middleware/validateRefreshToken.js";
 
@@ -28,14 +27,21 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
-  res.send("INI SERVER APLIKASI KOCE");
+  res.status(201).send("INI SERVER APLIKASI KOCE");
 });
 
-app.get("/accessToken", validateAccessToken);
-app.get("/refreshToken", validateRefreshToken);
+app.get("/profile", validateAccessToken, (req, res) => {
+  res.send({ loggedIn: req.loggedIn, username: req.username });
+});
+app.get("/refreshToken", validateRefreshToken, (req, res) => {
+  res.send(req.headers.authorization);
+});
 app.use("/login", LoginRouter);
 app.use("/signup", SignupRouter);
-app.use("/token", CreateTokenRouter);
+app.get("/data", validateAccessToken, (req, res) => {
+  const username = req.query.username;
+  res.send({ username: username, message: "HALOO" });
+});
 
 app.set("port", process.env.PORT || 3001);
 
