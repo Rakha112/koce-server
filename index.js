@@ -8,6 +8,7 @@ import SignupRouter from "./routes/signupRoute.js";
 import { validateAccessToken } from "./middleware/validateAccessToken.js";
 import { validateRefreshToken } from "./middleware/validateRefreshToken.js";
 
+// UPDATE HEROKU STACK
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
