@@ -6,5 +6,5 @@ export const db = mysql.createPool({
   user: process.env.USER_DB_HEROKU,
   password: process.env.PASSWORD_DB_HEROKU,
   database: process.env.DATABASE_DB_HEROKU,
-  port: 3306,
+  // port: 3306,
 });
