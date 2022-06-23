@@ -52,7 +52,6 @@ export const validateAccessToken = (req, res, next) => {
     const accessToken = tokenWeb;
     try {
       if (jwt_decode(accessToken).username === username) {
-        console.log("BENAR");
         // validasi token
         verify(
           accessToken,
@@ -68,7 +67,6 @@ export const validateAccessToken = (req, res, next) => {
         );
       } else {
         //Jika username di token tidak sama dengan username di request body
-        console.log("SALAH");
         return res.send({
           pesan: "user tidak terautentikasi",
         });
