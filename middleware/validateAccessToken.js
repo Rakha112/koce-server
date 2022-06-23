@@ -16,12 +16,10 @@ export const validateAccessToken = (req, res, next) => {
     const token = tokenMobile.split(" ");
     // ambil tokennya
     const accessToken = token[1];
-    console.log({ accessToken });
     // Validasi Token
     try {
       // Cek apakah Username Token sama dengan username Req
       if (jwt_decode(accessToken).username === username) {
-        console.log("BENAR");
         // validasi accessToken
         verify(
           accessToken,
@@ -38,7 +36,6 @@ export const validateAccessToken = (req, res, next) => {
         );
       } else {
         //Jika username di token tidak sama dengan username di request body
-        console.log("SALAH");
         req.loggedIn = false;
         return res.status(403).send({
           pesan: "user tidak diijinkan",
@@ -46,7 +43,6 @@ export const validateAccessToken = (req, res, next) => {
         });
       }
     } catch (err) {
-      console.log("ERROR ACCESS");
       return res.status(401).send({
         pesan: "user tidak terautentikasi access",
         loggedIn: false,

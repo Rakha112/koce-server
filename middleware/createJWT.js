@@ -5,7 +5,7 @@ export const createAccessTokens = (user) => {
     { username: user },
     process.env.JWT_SECRET.toString(),
     {
-      expiresIn: "30s",
+      expiresIn: "5m",
     }
   );
   return accessToken;
@@ -15,7 +15,7 @@ export const createRefreshTokens = (user) => {
     { username: user },
     process.env.JWT_SECRET.toString(),
     {
-      expiresIn: "3m",
+      expiresIn: "10m",
     }
   );
   return refreshToken;
