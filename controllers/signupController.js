@@ -4,30 +4,26 @@ const saltRounds = 10;
 
 export const signup = (req, res) => {
   // Abil data username dan password dari Body Request
-  const username = req.body.username;
-  const password = req.body.password;
-  // ENCRIPT PASSWORD
-  bcrypt.hash(password, saltRounds, (err, hash) => {
+  const nomorhp = req.body.nohp;
+  const email = req.body.email;
+  const nama = req.body.nama;
+  // SQL Query
+  const signupSqlInsert =
+    "INSERT INTO user (nomorhp, email, nama) VALUES (?,?,?);";
+  // Masuk ke MYSQL database
+  db.query(signupSqlInsert, [nomorhp, email, nama], (err, result) => {
     if (err) {
       console.log(err);
+      res.send({
+        alert: 2,
+        pesan: "Nomor HP sudah terdaftar",
+      });
     }
-    // SQL Query
-    const signupSqlInsert =
-      "INSERT INTO user (username, password) VALUES (?,?);";
-    // Masuk ke MYSQL database
-    db.query(signupSqlInsert, [username, hash], (err, result) => {
-      if (err) {
-        res.send({
-          alert: 2,
-          pesan: "Username sudah terdaftar",
-        });
-      }
-      if (result) {
-        res.send({
-          alert: 1,
-          pesan: "Sign Up berhasil, Silahkan Log In",
-        });
-      }
-    });
+    if (result) {
+      res.send({
+        alert: 1,
+        pesan: "Sign Up berhasil, Silahkan Log In",
+      });
+    }
   });
 };

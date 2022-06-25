@@ -47,35 +47,23 @@ export const login = (req, res) => {
   });
 };
 export const loginMobile = (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
-  const LoginQuery = "SELECT * FROM user WHERE username = ?;";
-  db.query(LoginQuery, username, (err, result) => {
+  const nomorhp = req.body.nomorhp;
+  const LoginQuery = "SELECT * FROM user WHERE nomorhp = ?;";
+  db.query(LoginQuery, nomorhp, (err, result) => {
     if (err) {
+      console.log(err);
       res.send({
         err: err,
       });
     }
     if (result.length > 0) {
-      bcrypt.compare(password, result[0].password, (error, response) => {
-        if (response) {
-          const accessToken = createAccessTokens(result[0].username);
-          const refreshToken = createRefreshTokens(result[0].username);
-          res.header("Authorization", `Bearer ${accessToken} ${refreshToken}`);
-          res.status(201).send({
-            alert: 1,
-            pesan: "Log In berhasil",
-          });
-        } else {
-          res.send({
-            alert: 2,
-            pesan: "Username atau password salah",
-          });
-        }
+      res.send({
+        alert: 1,
+        pesan: "Username ditemukan",
       });
     } else {
       res.send({
-        alert: 3,
+        alert: 2,
         pesan: "Username tidak ditemukan",
       });
     }
