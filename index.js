@@ -6,6 +6,8 @@ import cors from "cors";
 import LoginRouter from "./routes/loginRoute.js";
 import SignupRouter from "./routes/signupRoute.js";
 import FavoritRouter from "./routes/favoritRoute.js";
+import DataRouter from "./routes/dataRoute.js";
+import KategoriRouter from "./routes/kategoriRoute.js";
 import { validateAccessToken } from "./middleware/validateAccessToken.js";
 import { validateRefreshToken } from "./middleware/validateRefreshToken.js";
 
@@ -41,10 +43,12 @@ app.get("/refreshToken", validateRefreshToken, (req, res) => {
 app.use("/login", LoginRouter);
 app.use("/signup", SignupRouter);
 app.use("/favorit", FavoritRouter);
-app.get("/data", validateAccessToken, (req, res) => {
-  const username = req.query.username;
-  res.send({ username: username, message: "HALOO" });
-});
+app.use("/data", DataRouter);
+app.use("/kategori", KategoriRouter);
+// app.get("/data", validateAccessToken, (req, res) => {
+//   const username = req.query.username;
+//   res.send({ username: username, message: "HALOO" });
+// });
 
 app.set("port", process.env.PORT || 3001);
 
