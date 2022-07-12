@@ -8,6 +8,7 @@ import SignupRouter from "./routes/signupRoute.js";
 import FavoritRouter from "./routes/favoritRoute.js";
 import DataRouter from "./routes/dataRoute.js";
 import KategoriRouter from "./routes/kategoriRoute.js";
+import MenuRouter from "./routes/menuRoute.js";
 import { validateAccessToken } from "./middleware/validateAccessToken.js";
 import { validateRefreshToken } from "./middleware/validateRefreshToken.js";
 
@@ -45,10 +46,7 @@ app.use("/signup", SignupRouter);
 app.use("/favorit", FavoritRouter);
 app.use("/data", DataRouter);
 app.use("/kategori", KategoriRouter);
-// app.get("/data", validateAccessToken, (req, res) => {
-//   const username = req.query.username;
-//   res.send({ username: username, message: "HALOO" });
-// });
+app.use("/menu", MenuRouter);
 
 app.set("port", process.env.PORT || 3001);
 
