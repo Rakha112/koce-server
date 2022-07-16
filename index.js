@@ -9,6 +9,7 @@ import FavoritRouter from "./routes/favoritRoute.js";
 import DataRouter from "./routes/dataRoute.js";
 import KategoriRouter from "./routes/kategoriRoute.js";
 import MenuRouter from "./routes/menuRoute.js";
+import VariasiRouter from "./routes/variasiRoute.js";
 import { validateAccessToken } from "./middleware/validateAccessToken.js";
 import { validateRefreshToken } from "./middleware/validateRefreshToken.js";
 
@@ -47,6 +48,7 @@ app.use("/favorit", FavoritRouter);
 app.use("/data", DataRouter);
 app.use("/kategori", KategoriRouter);
 app.use("/menu", MenuRouter);
+app.use("/variasi", VariasiRouter);
 
 app.set("port", process.env.PORT || 3001);
 
