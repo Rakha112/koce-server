@@ -20,8 +20,8 @@ export const tambahKategori = (req, res) => {
   });
 };
 export const getKategori = (req, res) => {
-  const tambah = "select * from Kategori;";
-  db.query(tambah, (err, result) => {
+  const getKategori = "select * from Kategori;";
+  db.query(getKategori, (err, result) => {
     if (err) {
       res.send({ err: err, pesan: "TIDAK BERHASIL MENDAPAT KATEGORI" });
     } else {
@@ -35,13 +35,28 @@ export const deleteKategori = (req, res) => {
   const kategori = req.query.kategori;
   const deleteQuery = "delete from Kategori where NamaKategori = (?);";
   db.query(deleteQuery, kategori, (err, result) => {
-    console.log(err);
     if (err) {
       res
         .status(404)
         .send({ err: err, pesan: "TIDAK BERHASIL MENGHAPUS KATEGORI" });
     } else {
       res.status(200).send({ pesan: "BERHASIL MENGHAPUS KATEGORI" });
+    }
+  });
+};
+
+export const editKategori = (req, res) => {
+  const kategori = req.body.kategori;
+  const kategoriBaru = req.body.kategoriBaru;
+  const editQuery =
+    "update Kategori set NamaKategori = ? where NamaKategori = ?;";
+  db.query(editQuery, [kategoriBaru, kategori], (err, result) => {
+    if (err) {
+      res
+        .status(404)
+        .send({ err: err, pesan: "TIDAK BERHASIL MERUBAH KATEGORI" });
+    } else {
+      res.status(200).send({ pesan: "BERHASIL MERUBAH KATEGORI" });
     }
   });
 };
