@@ -52,9 +52,16 @@ export const editKategori = (req, res) => {
     "update Kategori set NamaKategori = ? where NamaKategori = ?;";
   db.query(editQuery, [kategoriBaru, kategori], (err, result) => {
     if (err) {
-      res
-        .status(404)
-        .send({ err: err, pesan: "TIDAK BERHASIL MERUBAH KATEGORI" });
+      if (err.code === "ER_DUP_ENTRY") {
+        res.status(409).send({
+          err: err,
+          pesan: "TIDAK BERHASIL MERUBAH KATEGORI, NAMA KATEGORI SUDAH ADA",
+        });
+      } else {
+        res
+          .status(404)
+          .send({ err: err, pesan: "TIDAK BERHASIL MERUBAH KATEGORI" });
+      }
     } else {
       res.status(200).send({ pesan: "BERHASIL MERUBAH KATEGORI" });
     }
