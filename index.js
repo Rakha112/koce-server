@@ -10,6 +10,7 @@ import DataRouter from "./routes/dataRoute.js";
 import KategoriRouter from "./routes/kategoriRoute.js";
 import MenuRouter from "./routes/menuRoute.js";
 import VariasiRouter from "./routes/variasiRoute.js";
+import opsiRouter from "./routes/opsiRoute.js";
 import { validateAccessToken } from "./middleware/validateAccessToken.js";
 import { validateRefreshToken } from "./middleware/validateRefreshToken.js";
 
@@ -49,6 +50,7 @@ app.use("/data", DataRouter);
 app.use("/kategori", KategoriRouter);
 app.use("/menu", MenuRouter);
 app.use("/variasi", VariasiRouter);
+app.use("/opsi", opsiRouter);
 
 app.set("port", process.env.PORT || 3001);
 
