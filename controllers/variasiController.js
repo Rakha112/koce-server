@@ -2,7 +2,7 @@ import { db } from "../configs/dbConfig.js";
 
 export const getVariasi = (req, res) => {
   const produk = req.query.produk;
-  const getVariasiQuery = "select * from Variasi where NamaProduk = ?;";
+  const getVariasiQuery = `select v.NamaVariasi, v.MaxPilihan, v.VariasiId, (select (JSON_ARRAYAGG(JSON_OBJECT("Opsi", o.NamaOpsiVariasi, 'Harga', o.TambahHarga, "Status", o.Status))) from opsivariasi o where o.VariasiId = v.VariasiId) as OpsiVariasi from Variasi v where NamaProduk = ?;`;
 
   db.query(getVariasiQuery, produk, (err, result) => {
     if (err) {
@@ -36,6 +36,22 @@ export const tambahVariasi = (req, res) => {
       }
     } else {
       res.status(201).send({ pesan: "BERHASIL TAMBAH VARIASI" });
+    }
+  });
+};
+
+export const deleteVariasi = (req, res) => {
+  const variasi = req.query.variasi;
+  const produk = req.query.produk;
+  const deleteVariasi =
+    "delete from variasi where NamaVariasi = ? AND NamaProduk = ?;";
+  db.query(deleteVariasi, [variasi, produk], (err, result) => {
+    if (err) {
+      res
+        .status(404)
+        .send({ err: err, pesan: "TIDAK BERHASIL MENGHAPUS VARIASI" });
+    } else {
+      res.status(200).send({ pesan: "BERHASIL MENGHAPUS VARIASI" });
     }
   });
 };
