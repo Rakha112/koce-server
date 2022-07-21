@@ -11,6 +11,7 @@ import KategoriRouter from "./routes/kategoriRoute.js";
 import MenuRouter from "./routes/menuRoute.js";
 import VariasiRouter from "./routes/variasiRoute.js";
 import opsiRouter from "./routes/opsiRoute.js";
+import keranjangRouter from "./routes/keranjangRoute.js";
 import { validateAccessToken } from "./middleware/validateAccessToken.js";
 import { validateRefreshToken } from "./middleware/validateRefreshToken.js";
 
@@ -51,6 +52,7 @@ app.use("/kategori", KategoriRouter);
 app.use("/menu", MenuRouter);
 app.use("/variasi", VariasiRouter);
 app.use("/opsi", opsiRouter);
+app.use("/keranjang", keranjangRouter);
 
 app.set("port", process.env.PORT || 3001);
 
