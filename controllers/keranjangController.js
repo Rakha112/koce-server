@@ -62,3 +62,24 @@ export const getKeranjang = (req, res) => {
     }
   });
 };
+export const getSpesifik = (req, res) => {
+  const menu = req.query.menu;
+  const getSpesifik = `select *, (SELECT JSON_ARRAYAGG(JSON_OBJECT("Nama", v.NamaVariasi, "MaxPilihan", v.MaxPilihan, 
+  "Opsi",(select JSON_ARRAYAGG(JSON_OBJECT("NamaOpsi", o.NamaOpsiVariasi, "TambahHarga", o.TambahHarga, 'Status', o.Status)) 
+  from OpsiVariasi o where o.VariasiId = v.VariasiId)))
+  from variasi v where v.NamaProduk = p.NamaProduk) as Variasi 
+  from produk p where p.NamaProduk = ?;`;
+
+  db.query(getSpesifik, menu, (err, result) => {
+    if (err) {
+      res.status(404).send({
+        err: err,
+        pesan: "GAGAL MENDAPAT KERANJANG",
+      });
+    } else {
+      res
+        .status(200)
+        .send({ data: result, pesan: "BERHASIL MENDAPAT KERANJANG" });
+    }
+  });
+};
