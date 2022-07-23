@@ -1,5 +1,21 @@
 import { db } from "../configs/dbConfig.js";
 
+export const deleteKeranjang = (req, res) => {
+  const noHP = req.query.noHP;
+  const menu = req.query.menu;
+  const deleteKeranjang =
+    "delete from keranjang where NomorHp = ? and Menu = ?;";
+  db.query(deleteKeranjang, [noHP, menu], (err, result) => {
+    if (err) {
+      res
+        .status(404)
+        .send({ err: err, pesan: "TIDAK BERHASIL MENGHAPUS KERANJANG" });
+    } else {
+      res.status(200).send({ pesan: "BERHASIL MENGHAPUS KERANJANG" });
+    }
+  });
+};
+
 export const tambahKeranjang = (req, res) => {
   const menu = req.body.menu;
   const foto = req.body.foto;
@@ -64,7 +80,7 @@ export const getKeranjang = (req, res) => {
 };
 export const getSpesifik = (req, res) => {
   const menu = req.query.menu;
-  const getSpesifik = `select *, (SELECT JSON_ARRAYAGG(JSON_OBJECT("Nama", v.NamaVariasi, "MaxPilihan", v.MaxPilihan, 
+  const getSpesifik = `select p.NamaProduk as Nama, p.Gambar as Foto, p.Deskripsi as Deskripsi, p.Harga as Harga, p.Status as Status, (SELECT JSON_ARRAYAGG(JSON_OBJECT("Nama", v.NamaVariasi, "MaxPilihan", v.MaxPilihan, 
   "Opsi",(select JSON_ARRAYAGG(JSON_OBJECT("NamaOpsi", o.NamaOpsiVariasi, "TambahHarga", o.TambahHarga, 'Status', o.Status)) 
   from OpsiVariasi o where o.VariasiId = v.VariasiId)))
   from variasi v where v.NamaProduk = p.NamaProduk) as Variasi 
